@@ -44,27 +44,32 @@ Paraphrases the provided text while maintaining its original meaning and stores 
 - **Content-Type**: `application/json`
 
 **Request Body**:
+
 ```json
 {
-    "text": "Text to be paraphrased"
+  "text": "Text to be paraphrased"
 }
 ```
 
 **Success Response**:
+
 - **Code**: 200 OK
 - **Content**:
+
 ```json
 {
-    "paraphrased_text": "The paraphrased version of the text"
+  "paraphrased_text": "The paraphrased version of the text"
 }
 ```
 
 **Error Response**:
+
 - **Code**: 500 Internal Server Error
 - **Content**:
+
 ```json
 {
-    "error": "Error message description"
+  "error": "Error message description"
 }
 ```
 
@@ -76,27 +81,43 @@ Retrieves all previously paraphrased texts from the database.
 - **Method**: `GET`
 
 **Success Response**:
+
 - **Code**: 200 OK
 - **Content**:
+
 ```json
 [
-    {
-        "_id": "...",
-        "original_text": "Original text that was paraphrased",
-        "paraphrased_text": "The paraphrased version of the text",
-        "created_at": "2025-05-11T19:20:30.123Z"
-    }
+  {
+    "_id": "...",
+    "original_text": "Original text that was paraphrased",
+    "paraphrased_text": "The paraphrased version of the text",
+    "created_at": "2025-05-11T19:20:30.123Z"
+  }
 ]
 ```
 
 **Error Response**:
+
 - **Code**: 500 Internal Server Error
 - **Content**:
+
 ```json
 {
-    "error": "Database error message"
+  "error": "Database error message"
 }
 ```
+
+## CORS Configuration
+
+The API is configured to allow cross-origin requests with the following settings:
+
+- All origins are allowed (\*)
+- Allowed HTTP methods: GET, POST, PUT, DELETE
+- All headers are allowed
+- Credentials are supported
+- CORS preflight requests are cached for 1 hour
+
+This means you can connect to the API from any frontend application, regardless of its domain.
 
 ## Testing the API
 
@@ -156,23 +177,23 @@ print("History:", json.dumps(history_response.json(), indent=2))
 
 ```javascript
 // 1. Paraphrase text
-const response = await fetch('http://localhost:8080/api/paraphrase', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        text: 'Hello world, this is a test message.'
-    })
+const response = await fetch("http://localhost:8080/api/paraphrase", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    text: "Hello world, this is a test message.",
+  }),
 });
 
 const data = await response.json();
-console.log('Paraphrase response:', data);
+console.log("Paraphrase response:", data);
 
 // 2. Get history
-const historyResponse = await fetch('http://localhost:8080/api/history');
+const historyResponse = await fetch("http://localhost:8080/api/history");
 const history = await historyResponse.json();
-console.log('History:', history);
+console.log("History:", history);
 ```
 
 ## Running Tests

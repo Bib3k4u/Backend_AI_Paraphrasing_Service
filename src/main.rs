@@ -29,8 +29,10 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allow_any_origin()
-            .allow_any_method()
-            .allow_any_header();
+            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
+            .allow_any_header()
+            .max_age(3600)
+            .supports_credentials();
 
         App::new()
             .wrap(cors)
