@@ -11,14 +11,23 @@ A Rust-based REST API service that provides text paraphrasing functionality usin
 
 ## Environment Setup
 
-Create a `.env` file in the root directory with the following variables:
+1. Copy the `.env.example` file to create your own `.env` file:
+
+```bash
+cp .env.example .env
+```
+
+2. Update the `.env` file with your actual credentials:
 
 ```env
-MONGODB_URI=mongodb+srv://your_username:your_password@cluster0.gaaho0t.mongodb.net/?retryWrites=true&w=majority
+MONGODB_URI=your_mongodb_connection_string
 DATABASE_NAME=ParaphrasingDB
-MISTRAL_API_KEY=your_api_key
+MISTRAL_API_KEY=your_mistral_api_key
+JWT_SECRET=your_jwt_secret_key
 PORT=8080
 ```
+
+Note: The `.env` file is ignored by Git to keep your credentials secure. Never commit sensitive credentials to version control.
 
 ## Running the Server
 

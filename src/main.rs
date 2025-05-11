@@ -21,7 +21,7 @@ async fn main() -> std::io::Result<()> {
         .parse::<u16>()
         .expect("PORT must be a number");
 
-    println!("Server running at http://localhost:{}", port);
+    println!("Server running at http://0.0.0.0:{}", port);
 
     let db = database::init_database().await;
     let db_service = web::Data::new(ParaphrasedTextService::new(db));
@@ -40,7 +40,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(db_service.clone())
             .configure(routes::config)
     })
-    .bind(("127.0.0.1", port))?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }
