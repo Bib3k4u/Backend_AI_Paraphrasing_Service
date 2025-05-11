@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Paraphrasing Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        #editor {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            background-color: white;
+        }
+        #paraphraseButton {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #paraphraseButton:hover {
+            background-color: #45a049;
+        }
+        .tooltip {
+            position: fixed;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Paraphrasing Tool</h1>
+    <textarea id="editor" placeholder="Enter or paste your text here..."></textarea>
+    <div id="tooltip" class="tooltip">
+        <button id="paraphraseButton">Paraphrase Selection</button>
+    </div>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const tooltip = document.getElementById('tooltip');
+        const paraphraseButton = document.getElementById('paraphraseButton');
+
+        editor.addEventListener('mouseup', () => {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+
+            if (selectedText) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${rect.left + window.scrollX}px`;
+                tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+            } else {
+                tooltip.style.display = 'none';
+            }
+        });
+
+        paraphraseButton.addEventListener('click', async () => {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            
+            if (selectedText) {
+                try {
+                    const response = await fetch('http://localhost:8080/api/paraphrase', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: selectedText }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Paraphrasing failed');
+                    }
+
+                    const data = await response.json();
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(data.paraphrased_text));
+                    tooltip.style.display = 'none';
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to paraphrase text. Please try again.');
+                }
+            }
+        });
+
+        // Hide tooltip when clicking outside
+        document.addEventListener('mousedown', (e) => {
+            if (!tooltip.contains(e.target) && e.target !== editor) {
+                tooltip.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
